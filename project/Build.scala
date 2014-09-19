@@ -14,7 +14,7 @@ object Version {
 }
 
 object Dependencies {
-  val gluegen_rt = "org.jogamp.gluegen" % "gluegen-rt" % "2.2.1"
+  val gluegen_rt = "org.jogamp.gluegen" % "gluegen-rt-main" % "2.2.1"
 
   val jogl_all = "org.jogamp.jogl" % "jogl-all-main" % "2.2.1" 
 }
@@ -95,9 +95,11 @@ object Build extends sbt.Build {
 	      val dest = new File(f.getParent, appendJarName(f.getName, jar))
 	      val dest2 = new File(f.getParent, "natives/" + os + "/" + path)
 	      println("dest: " + dest + " dest2: " + dest2)
-	      IO.move(f, dest)
-	      val result = Seq(dest -> appendJarName(path, jar))
-	      if (dest.isDirectory) ((dest ** (-DirectoryFilter))) x relativeTo(base)
+	      //IO.move(f, dest)
+	      //val result = Seq(dest -> appendJarName(path, jar))
+	      IO.move(f, dest2)
+	      val result = Seq(dest2 -> ("natives/" + os + "/" + path))
+	      if (dest2.isDirectory) ((dest2 ** (-DirectoryFilter))) x relativeTo(base)
 	      else result
 	   }
       }

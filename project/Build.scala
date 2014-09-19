@@ -84,22 +84,18 @@ object Build extends sbt.Build {
 		val (source, _, _, _) = sourceOfFileForMerge(tempDir, f) 
 		source.getName
 	    }
-	    val filtered = filenames.filter(name => name.startsWith("jogl-all") && name.contains("natives"))
-	    if (filtered.isEmpty) {
+	    if (filenames.isEmpty) {
 	      Seq(f -> path)
 	    } else {
 	      val sourceJarName = jar.getName
 	      val index0 = sourceJarName.indexOf("natives") + 8
 	      val index1 = sourceJarName.lastIndexOf(".")
 	      val os = sourceJarName.substring(index0, index1)
-	      val dest = new File(f.getParent, appendJarName(f.getName, jar))
-	      val dest2 = new File(f.getParent, "natives/" + os + "/" + path)
-	      println("dest: " + dest + " dest2: " + dest2)
-	      //IO.move(f, dest)
-	      //val result = Seq(dest -> appendJarName(path, jar))
-	      IO.move(f, dest2)
-	      val result = Seq(dest2 -> ("natives/" + os + "/" + path))
-	      if (dest2.isDirectory) ((dest2 ** (-DirectoryFilter))) x relativeTo(base)
+	      val dest = new File(f.getParent, "natives/" + os + "/" + path)
+	      println("dest: " + dest + " path: " + path)
+	      IO.move(f, dest)
+	      val result = Seq(dest -> ("natives/" + os + "/" + path))
+	      if (dest.isDirectory) ((dest ** (-DirectoryFilter))) x relativeTo(base)
 	      else result
 	   }
       }

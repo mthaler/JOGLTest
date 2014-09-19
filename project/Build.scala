@@ -34,7 +34,6 @@ object BuildSettings {
     scalaVersion := buildScalaVersion,
     fork := true,
     javacOptions ++= Seq("-Xlint:unchecked"),
-    resolvers += "spray repo" at "http://repo.spray.io",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
   )
 
@@ -59,6 +58,7 @@ object Build extends sbt.Build {
     settings = jarBuildSettings ++ Seq(
       jarName := "jogltest.jar",
       libraryDependencies ++= Seq(gluegen_rt, jogl_all),
+      mainClass in assembly := Some("jogltest.JOGL2Ex2Rotate3D_GLCanvas"),
       mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
 	{
 	  case s if s.endsWith(".so") => custom
@@ -92,7 +92,6 @@ object Build extends sbt.Build {
 	      val index1 = sourceJarName.lastIndexOf(".")
 	      val os = sourceJarName.substring(index0, index1)
 	      val dest = new File(f.getParent, "natives/" + os + "/" + path)
-	      println("dest: " + dest + " path: " + path)
 	      IO.move(f, dest)
 	      val result = Seq(dest -> ("natives/" + os + "/" + path))
 	      if (dest.isDirectory) ((dest ** (-DirectoryFilter))) x relativeTo(base)
